@@ -617,6 +617,11 @@ pub fn mulassign_scalar(octets: &mut [u8], scalar: &Octet) {
     #[cfg(all(any(target_arch = "x86", target_arch = "x86_64"), feature = "std"))]
     {
         if is_x86_feature_detected!("avx512f") && is_x86_feature_detected!("avx512bw") {
+            if is_x86_feature_detected!("gfni") {
+                unsafe {
+                    return crate::octets_gfni::mulassign_scalar_gfni(octets, scalar);
+                }
+            }
             unsafe {
                 return mulassign_scalar_avx512(octets, scalar);
             }
@@ -831,6 +836,13 @@ pub fn fused_addassign_mul_scalar(octets: &mut [u8], other: &[u8], scalar: &Octe
     #[cfg(all(any(target_arch = "x86", target_arch = "x86_64"), feature = "std"))]
     {
         if is_x86_feature_detected!("avx512f") && is_x86_feature_detected!("avx512bw") {
+            if is_x86_feature_detected!("gfni") {
+                unsafe {
+                    return crate::octets_gfni::fused_addassign_mul_scalar_gfni(
+                        octets, other, scalar,
+                    );
+                }
+            }
             unsafe {
                 return fused_addassign_mul_scalar_avx512(octets, other, scalar);
             }

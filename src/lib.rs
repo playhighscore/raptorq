@@ -28,6 +28,8 @@ mod matrix;
 mod octet;
 mod octet_matrix;
 mod octets;
+#[cfg(all(any(target_arch = "x86", target_arch = "x86_64"), feature = "std"))]
+mod octets_gfni;
 mod operation_vector;
 mod pi_solver;
 #[cfg(feature = "python")]
